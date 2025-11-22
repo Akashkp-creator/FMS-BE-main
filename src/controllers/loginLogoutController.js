@@ -264,6 +264,8 @@ export const login = async (req, res) => {
             institutionName: client.institutionName,
             institutionAddress: client.institutionAddress,
             institutionPhone: client.institutionPhone,
+            franchiseFinance: client.franchiseFinance,
+            courses: client.courses,
           }
         : null,
     });

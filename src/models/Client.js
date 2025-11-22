@@ -31,7 +31,7 @@ const clientSchema = new mongoose.Schema(
     franchiseFinance: [
       {
         cityTier: {
-          type: Number,
+          type: String,
           required: true,
         },
 
