@@ -42,6 +42,7 @@ app.get("/", (req, res) => {
 });
 
 // ----------------------------------------------------
+// ===================================================
 // ROUTE SETUP
 // Mount the attendance router
 // All routes defined in attendanceRoutes.js will be prefixed with /api/attendance
