@@ -234,10 +234,10 @@ export const login = async (req, res) => {
         .json({ message: "Your account is not active. Please contact Admin." });
     }
 
-    console.log(user);
+    // console.log(user);
     // ⭐ 2. Get client based on role
     const client = await getClientForRole(user);
-    console.log(`hi details ${client} `);
+    // console.log(`hi details ${client} `);
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch)

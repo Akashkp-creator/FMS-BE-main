@@ -41,7 +41,14 @@ const franchiseLeadSchema = new mongoose.Schema(
     // -----------------------
     status: {
       type: String,
-      enum: ["New", "In Progress", "Interested", "Not Interested", "Closed"],
+      enum: [
+        "New",
+        "In Progress",
+        "Interested",
+        "Not Interested",
+        "Closed",
+        "Enrolled",
+      ],
       default: "New",
     },
 

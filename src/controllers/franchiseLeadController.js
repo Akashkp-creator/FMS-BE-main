@@ -1,5 +1,11 @@
 import FranchiseLead from "../models/FranchiseLead.js";
 
+import Franchise from "../models/Franchise.js";
+import Payment from "../models/Payment.js";
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
+// import FranchiseLead from "../models/FranchiseLead.js";
+
 // ------------------------------------------------------
 // 1️⃣ ADD NEW FRANCHISE LEAD
 // ------------------------------------------------------
@@ -13,7 +19,7 @@ export const addFranchiseLead = async (req, res) => {
 
     // managerId comes from auth middleware
     const managerId = req.user.managerId;
-    console.log(managerId);
+    // console.log(managerId);
 
     if (!managerId) {
       return res.status(403).json({ message: "Only managers can add leads." });
@@ -221,7 +227,7 @@ export const getManagerLeads = async (req, res) => {
     // const managerId = req.user.id; // logged-in manager (user ID)
     const managerId = req.user.managerId; // logged-in manager (user ID)
     // console.log(managerId);
-    console.log(req.user.managerId);
+    // console.log(req.user.managerId);
     // console.log(req.user);
 
     // -----------------------
@@ -319,5 +325,114 @@ export const deleteLead = async (req, res) => {
   } catch (error) {
     console.error("Delete Lead Error:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+// to create a franchise
+
+// export const createFranchise = async (req, res) => {
+//   try {
+//     const managerId = req.user.managerId; // from token
+//     console.log(managerId);
+//     const { FranchiseLeadId } = req.params;
+//     console.log(FranchiseLeadId);
+
+//     const { franchiseName, address, location } = req.body;
+//     console.log(franchiseName, address, location);
+
+//     const paymentData = req.body.payment; // frontend sends payment object
+
+//     if (!paymentData) {
+//       return res.status(400).json({ message: "Payment data required" });
+//     }
+
+//     // 1️⃣ Create Payment
+//     const payment = await Payment.create(paymentData);
+
+//     // 2️⃣ Create Franchise
+//     const franchise = await Franchise.create({
+//       franchiseName,
+//       managerId,
+//       address,
+//       location,
+//       paymentId: payment._id,
+//     });
+
+//     // 3️⃣ Update Lead Status → Enrolled
+//     await FranchiseLead.findByIdAndUpdate(leadId, {
+//       status: "Enrolled",
+//     });
+
+//     res.status(201).json({
+//       message: "Franchise created successfully",
+//       // data: franchise,
+//     });
+//   } catch (error) {
+//     console.error("Create Franchise Error:", error);
+//     res.status(500).json({ message: "Server error while creating franchise" });
+//   }
+// };
+
+export const createFranchise = async (req, res) => {
+  try {
+    const managerId = req.user.managerId; // From token (logged-in manager)
+    // console.log(managerId + "this is manager id");
+    const clientId = req.user.clientId; // From token
+    // console.log(clientId + "this is client id");
+    const { FranchiseLeadId } = req.params;
+    // console.log(FranchiseLeadId + "this is franchise lead Id");
+
+    const {
+      franchiseName,
+      address,
+      location,
+      payment,
+      franchiseEmail,
+      ownerName,
+      franchisePassword,
+    } = req.body;
+
+    if (!payment) {
+      return res.status(400).json({ message: "Payment data required" });
+    }
+
+    // 1️⃣ Create Payment
+    const paymentDoc = await Payment.create(payment);
+
+    // 2️⃣ Create Franchise
+    const franchise = await Franchise.create({
+      franchiseName,
+      managerId,
+      address,
+      location,
+      paymentId: paymentDoc._id,
+    });
+
+    // 3️⃣ Create Franchise User
+    // 3️⃣ Create Franchise User  (bcryptjs)
+    const passwordHash = bcrypt.hashSync(franchisePassword, 10);
+
+    const franchiseUser = await User.create({
+      name: ownerName,
+      email: franchiseEmail,
+      passwordHash,
+      role: "Franchise",
+      franchiseId: franchise._id,
+      managerId: managerId,
+      clientId: clientId,
+    });
+
+    // 4️⃣ Update Lead Status → Enrolled
+    await FranchiseLead.findByIdAndUpdate(FranchiseLeadId, {
+      status: "Enrolled",
+    });
+
+    return res.status(201).json({
+      message: "Franchise  created successfully",
+      // franchiseId: franchise._id,
+      // userId: franchiseUser._id,
+    });
+  } catch (error) {
+    console.error("Create Franchise Error:", error);
+    res.status(500).json({ message: "Server error while creating franchise" });
   }
 };

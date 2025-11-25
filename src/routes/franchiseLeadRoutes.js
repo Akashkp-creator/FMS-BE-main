@@ -11,11 +11,13 @@ import { authMiddleware, roleMiddleware } from "../middleware/auth.js";
 import {
   addFranchiseLead,
   addLeadNote,
+  createFranchise,
   deleteLead,
   getLeadById,
   getManagerLeads,
   updateLeadStatus,
 } from "../controllers/franchiseLeadController.js";
+import { checkManagerRegion } from "../middleware/checkManagerRegion.js";
 
 // import { auth } from "../middleware/auth.js";
 
@@ -33,6 +35,13 @@ router.get(
   authMiddleware,
   roleMiddleware("Manager"),
   getManagerLeads
+);
+router.post(
+  "/create-franchise/:FranchiseLeadId",
+  authMiddleware,
+  roleMiddleware("Manager"),
+  checkManagerRegion, // ✔ check if inside region
+  createFranchise
 );
 // router.post("/:leadId/add-note", authMiddleware, addLeadNote);
 // router.patch("/:leadId/status", authMiddleware, updateLeadStatus);
