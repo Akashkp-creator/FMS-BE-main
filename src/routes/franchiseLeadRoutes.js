@@ -14,8 +14,10 @@ import {
   createFranchise,
   deleteLead,
   getLeadById,
+  getLeadNotes,
   getManagerLeads,
   updateLeadStatus,
+  updateLeadStatusAsNotInterested,
 } from "../controllers/franchiseLeadController.js";
 import { checkManagerRegion } from "../middleware/checkManagerRegion.js";
 
@@ -49,6 +51,18 @@ router.post(
   roleMiddleware("Manager"),
   addLeadNote
 );
+router.get(
+  "/:leadId/notes",
+  authMiddleware,
+  roleMiddleware("Manager"),
+  getLeadNotes
+);
+
+router.put(
+  "/franchise-leads/status-not-interested/:leadId",
+  updateLeadStatusAsNotInterested
+);
+
 // router.patch("/:leadId/status", authMiddleware, updateLeadStatus);
 
 // router.get("/:leadId", authMiddleware, getLeadById);

@@ -2,9 +2,6 @@ import mongoose from "mongoose";
 
 const franchiseLeadSchema = new mongoose.Schema(
   {
-    // -----------------------
-    // Lead Owner Information
-    // -----------------------
     ownerName: {
       type: String,
       required: true,
@@ -27,18 +24,12 @@ const franchiseLeadSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // -----------------------
-    // Assigned Manager
-    // -----------------------
     managerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Manager",
       required: true,
     },
 
-    // -----------------------
-    // Lead Status
-    // -----------------------
     status: {
       type: String,
       enum: [
@@ -51,10 +42,12 @@ const franchiseLeadSchema = new mongoose.Schema(
       ],
       default: "New",
     },
+    reason: {
+      type: String,
+      default: null,
+      trim: true,
+    },
 
-    // -----------------------
-    // Follow-up Notes
-    // -----------------------
     notes: [
       {
         date: {
@@ -75,5 +68,16 @@ const franchiseLeadSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+franchiseLeadSchema.pre("validate", function (next) {
+  if (
+    this.status === "Not Interested" &&
+    (!this.reason || this.reason.trim() === "")
+  ) {
+    return next(
+      new Error("Reason is required when marking a lead as Not Interested")
+    );
+  }
+  next();
+});
 
 export default mongoose.model("FranchiseLead", franchiseLeadSchema);
