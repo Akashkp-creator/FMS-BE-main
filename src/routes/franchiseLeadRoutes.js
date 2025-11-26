@@ -43,7 +43,12 @@ router.post(
   checkManagerRegion, // ✔ check if inside region
   createFranchise
 );
-// router.post("/:leadId/add-note", authMiddleware, addLeadNote);
+router.post(
+  "/:leadId/add-note",
+  authMiddleware,
+  roleMiddleware("Manager"),
+  addLeadNote
+);
 // router.patch("/:leadId/status", authMiddleware, updateLeadStatus);
 
 // router.get("/:leadId", authMiddleware, getLeadById);
