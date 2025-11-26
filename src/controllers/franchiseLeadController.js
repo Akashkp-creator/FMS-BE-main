@@ -230,7 +230,7 @@ export const getManagerLeads = async (req, res) => {
     // 1. Pagination values
     // -----------------------
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 2;
+    const pageSize = parseInt(req.query.pageSize) || 5;
 
     const skip = (page - 1) * pageSize;
 
@@ -689,7 +689,8 @@ export const updateLeadStatusAsNotInterested = async (req, res) => {
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
     }
-
+    // console.log(lead + "from the lead");
+    // console.log(req.user + "form the req.user");
     // 4️⃣ Check manager access
     if (lead.managerId.toString() !== req.user.managerId.toString()) {
       return res.status(403).json({ message: "Unauthorized" });

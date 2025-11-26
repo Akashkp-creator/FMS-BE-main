@@ -60,6 +60,8 @@ router.get(
 
 router.put(
   "/franchise-leads/status-not-interested/:leadId",
+  authMiddleware,
+  roleMiddleware("Manager"),
   updateLeadStatusAsNotInterested
 );
 
