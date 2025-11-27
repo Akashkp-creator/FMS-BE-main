@@ -236,8 +236,10 @@ export const login = async (req, res) => {
 
     // console.log(user);
     // ⭐ 2. Get client based on role
-    const client = await getClientForRole(user);
-    // console.log(`hi details ${client} `);
+    // const client = await getClientForRole(user);
+    const { client, franchise } = await getClientForRole(user);
+
+    console.log(`hi from loginLogoutController franchise data${franchise} `);
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch)
@@ -257,6 +259,28 @@ export const login = async (req, res) => {
     });
     // console.log(`this is from login ${user}`);
 
+    // res.json({
+    //   message: "Login successful",
+    //   user: {
+    //     id: user._id,
+    //     name: user.name,
+    //     email: user.email,
+    //     role: user.role,
+    //     clientId: user.clientId ?? null,
+    //   },
+    //   client: client
+    //     ? {
+    //         id: client?._id,
+    //         logoUrl: client?.logoUrl,
+    //         institutionName: client?.institutionName,
+    //         institutionAddress: client?.institutionAddress,
+    //         institutionPhone: client?.institutionPhone,
+    //         franchiseFinance: client?.franchiseFinance,
+    //         courses: client?.courses,
+    //       }
+    //     : null,
+    // });
+
     res.json({
       message: "Login successful",
       user: {
@@ -265,16 +289,35 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
         clientId: user.clientId ?? null,
+        franchiseId: user.franchiseId ?? null,
       },
+
       client: client
         ? {
-            id: client._id,
-            logoUrl: client.logoUrl,
-            institutionName: client.institutionName,
-            institutionAddress: client.institutionAddress,
-            institutionPhone: client.institutionPhone,
-            franchiseFinance: client.franchiseFinance,
-            courses: client.courses,
+            // id: client._id,
+            // logoUrl: client.logoUrl,
+            // institutionName: client.institutionName,
+            // institutionAddress: client.institutionAddress,
+            // institutionPhone: client.institutionPhone,
+            // courses: client.courses,
+            id: client?._id,
+            logoUrl: client?.logoUrl,
+            institutionName: client?.institutionName,
+            institutionAddress: client?.institutionAddress,
+            institutionPhone: client?.institutionPhone,
+            franchiseFinance: client?.franchiseFinance,
+            courses: client?.courses,
+          }
+        : null,
+
+      franchise: franchise
+        ? {
+            id: franchise._id,
+            name: franchise.franchiseName,
+            address: franchise.address,
+            phone: franchise.ownerPhone,
+
+            // branchAddress: franchise.branchAddress,
           }
         : null,
     });
@@ -283,3 +326,5 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// ===================================================================

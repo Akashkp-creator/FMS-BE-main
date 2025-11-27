@@ -10,6 +10,7 @@ import franchiseLeadRoutes from "./routes/franchiseLeadRoutes.js";
 import { notFound } from "./middleware/not-found.js";
 // import "./utils/scheduler.js"; // Import scheduler
 import adminRoutes from "./routes/adminRoutes.js";
+import certRoutes from "./routes/certRoutes.js";
 import cors from "cors";
 
 // Load environment variables from .env file
@@ -25,12 +26,22 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL, // Your frontend URL
+//     credentials: true, // If you're using cookies/auth tokens
+//   })
+// );
+// import cors from "cors";
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Your frontend URL
-    credentials: true, // If you're using cookies/auth tokens
+    origin: "http://localhost:5173", // your React frontend
+    credentials: true,
+    exposedHeaders: ["Content-Disposition"],
   })
 );
+
 // Middleware
 app.use(express.json()); // To parse incoming JSON requests
 
@@ -52,6 +63,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/manager/franchise", franchiseLeadRoutes);
+app.use("/api/certificate", certRoutes);
 // app.use("/api/user", attendanceRoutes);
 
 // ----------------------------------------------------

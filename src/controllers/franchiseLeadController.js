@@ -384,6 +384,7 @@ export const createFranchise = async (req, res) => {
       payment,
       franchiseEmail,
       ownerName,
+      ownerPhone,
       franchisePassword,
     } = req.body;
 
@@ -397,6 +398,7 @@ export const createFranchise = async (req, res) => {
     // 2️⃣ Create Franchise
     const franchise = await Franchise.create({
       franchiseName,
+      ownerPhone,
       managerId,
       address,
       location,

@@ -8,6 +8,15 @@ const franchiseSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    ownerPhone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
 
     managerId: {
       type: mongoose.Schema.Types.ObjectId,

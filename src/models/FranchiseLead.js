@@ -10,9 +10,11 @@ const franchiseLeadSchema = new mongoose.Schema(
     ownerEmail: {
       type: String,
       required: true,
+      unique: true, // <--- **Add this line**
       lowercase: true,
       trim: true,
     },
+    // ... rest of your schema
     ownerPhone: {
       type: String,
       required: true,

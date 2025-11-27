@@ -19,9 +19,19 @@ const clientSchema = new mongoose.Schema(
       required: true,
     },
 
+    // institutionPhone: {
+    //   type: Number,
+    //   required: true,
+    // },
     institutionPhone: {
       type: String,
       required: true,
+      validate: {
+        validator: function (v) {
+          return v.length === 10;
+        },
+        message: (props) => `${props.value} must be exactly 10 characters long`,
+      },
     },
     logoUrl: { type: String, required: true },
 
