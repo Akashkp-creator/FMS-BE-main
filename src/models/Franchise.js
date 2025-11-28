@@ -17,6 +17,7 @@ const franchiseSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    revenueSharePercent: { type: Number, default: 0 }, // set by Manager during onboarding
 
     managerId: {
       type: mongoose.Schema.Types.ObjectId,

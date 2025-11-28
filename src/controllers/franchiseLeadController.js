@@ -386,8 +386,9 @@ export const createFranchise = async (req, res) => {
       ownerName,
       ownerPhone,
       franchisePassword,
+      revenueSharePercent,
     } = req.body;
-
+    // console.log(payment);
     if (!payment) {
       return res.status(400).json({ message: "Payment data required" });
     }
@@ -402,6 +403,7 @@ export const createFranchise = async (req, res) => {
       managerId,
       address,
       location,
+      revenueSharePercent,
       paymentId: paymentDoc._id,
     });
 
