@@ -102,6 +102,7 @@ export const getStudentLeads = async (req, res) => {
     const {
       name,
       status,
+      phone,
       dateFrom,
       dateTo,
       page = 1,
@@ -122,6 +123,10 @@ export const getStudentLeads = async (req, res) => {
     // Status filter
     if (status) {
       filter.status = status;
+    }
+    // Phone filter (nested field)
+    if (phone) {
+      filter["contact.phone"] = { $regex: phone, $options: "i" };
     }
 
     // Date Range filter (createdAt)
