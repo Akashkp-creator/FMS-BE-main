@@ -1,12 +1,27 @@
 // routes/studentLeadRoutes.js
 import express from "express";
-import { authMiddleware } from "../middleware/auth.js";
-import { createStudentLead } from "../controllers/createStudentLead.js";
+import { authMiddleware, roleMiddleware } from "../middleware/auth.js";
+import {
+  createStudentLead,
+  getStudentLeads,
+} from "../controllers/createStudentLead.js";
 // import { createStudentLead } from "../controllers/studentLeadController.js";
 // import authMiddleware from "../middleware/auth.js";
 
 const router = express.Router();
-//              /api/getLeadStudentData/create-studentLead
-router.post("/create-studentLead", authMiddleware, createStudentLead);
+//              /api/LeadStudentData/student-leadList/my-leads
+router.post(
+  "/create-studentLead",
+  authMiddleware,
+  roleMiddleware("Franchise"),
+  createStudentLead
+);
+
+router.get(
+  "/student-leadList/my-leads",
+  authMiddleware,
+  roleMiddleware("Franchise"),
+  getStudentLeads
+);
 
 export default router;

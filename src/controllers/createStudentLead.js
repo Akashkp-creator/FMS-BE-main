@@ -68,17 +68,111 @@ export const createStudentLead = async (req, res) => {
       };
     }
 
-    // const newLead = await StudentLead.create(leadData);
-    await StudentLead.create(leadData);
+    const newLead = await StudentLead.create(leadData);
+    // await StudentLead.create(leadData);
 
     return res.status(201).json({
       message: "Lead created successfully",
-      //   data: newLead,
+      data: newLead,
     });
   } catch (error) {
     console.error("Error creating lead:", error);
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+// controllers/studentLeadController.js
+
+export const getStudentLeads = async (req, res) => {
+  try {
+    const franchiseId = req.user?.franchiseId; // From auth middleware
+
+    if (!franchiseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Franchise ID missing from token",
+      });
+    }
+
+    // -------------------------
+    //   QUERY PARAMETERS
+    // -------------------------
+    const {
+      name,
+      status,
+      dateFrom,
+      dateTo,
+      page = 1,
+      pageSize = 10,
+    } = req.query;
+
+    const filter = { franchiseId };
+
+    // -------------------------
+    //   APPLY FILTERS
+    // -------------------------
+
+    // Name search (case-insensitive)
+    if (name) {
+      filter.name = { $regex: name, $options: "i" };
+    }
+
+    // Status filter
+    if (status) {
+      filter.status = status;
+    }
+
+    // Date Range filter (createdAt)
+    if (dateFrom || dateTo) {
+      filter.createdAt = {};
+
+      if (dateFrom) {
+        filter.createdAt.$gte = new Date(dateFrom);
+      }
+      if (dateTo) {
+        // Include full end day
+        filter.createdAt.$lte = new Date(new Date(dateTo).setHours(23, 59, 59));
+      }
+    }
+
+    // -------------------------
+    //   PAGINATION
+    // -------------------------
+    const skip = (Number(page) - 1) * Number(pageSize);
+    const limit = Number(pageSize);
+
+    // Count total items
+    const total = await StudentLead.countDocuments(filter);
+
+    // Fetch documents
+    const leads = await StudentLead.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const pageCount = Math.ceil(total / pageSize);
+
+    // -------------------------
+    //   RESPONSE
+    // -------------------------
+    return res.status(200).json({
+      success: true,
+      data: leads,
+      meta: {
+        page: Number(page),
+        pageSize: Number(pageSize),
+        pageCount,
+        total,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching student leads:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error. Could not fetch leads.",
+    });
   }
 };
