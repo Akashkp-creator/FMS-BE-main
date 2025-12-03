@@ -109,16 +109,21 @@ const paidHistorySchema = new mongoose.Schema(
       type: Date,
       required: [true, "Paid date required"],
     },
+    status: {
+      type: String,
+      enum: ["Completed", "Pending", "Failed"],
+      default: "Completed",
+    },
+
+    method: {
+      type: String,
+      enum: ["UPI", "Online", "Cash", "Bank Transfer"],
+      required: [true, "Payment method is required"],
+    },
     paidAmount: {
       type: Number,
       required: [true, "Paid amount required"],
       min: [0.01, "Paid amount must be greater than 0"],
-    },
-
-    receiptNo: {
-      type: String,
-      trim: true,
-      maxlength: 50,
     },
   },
   { _id: false }

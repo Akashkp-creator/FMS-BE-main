@@ -19,10 +19,10 @@ const clientSchema = new mongoose.Schema(
       required: true,
     },
 
-    // institutionPhone: {
-    //   type: Number,
-    //   required: true,
-    // },
+    gst: {
+      type: String,
+      // required: true,
+    },
     institutionPhone: {
       type: String,
       required: true,

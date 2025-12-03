@@ -127,6 +127,7 @@ export const updateClientByAdmin = async (req, res) => {
       institutionAddress,
       institutionPhone,
       logoUrl,
+      gst,
 
       franchiseFinance, // FULL ARRAY (not object)
       courses, // FULL ARRAY
@@ -139,6 +140,7 @@ export const updateClientByAdmin = async (req, res) => {
     if (institutionAddress) updateData.institutionAddress = institutionAddress;
     if (institutionPhone) updateData.institutionPhone = institutionPhone;
     if (logoUrl) updateData.logoUrl = logoUrl;
+    if (gst) updateData.gst = gst;
 
     // 4️⃣ FULL ARRAY REPLACEMENT FOR tiers
     if (Array.isArray(franchiseFinance)) {

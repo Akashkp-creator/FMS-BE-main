@@ -4,6 +4,7 @@ import express from "express";
 import {
   createStudent,
   getInstallmentPayments,
+  getStudentById,
   // debugCreateStudent,
 } from "../controllers/StudentController.js";
 // import { validateStudentData } from "../middleware/StudentDataValidater.js";
@@ -29,6 +30,13 @@ router.get(
   roleMiddleware("Franchise"),
   // debugCreateStudent,
   getInstallmentPayments
+);
+// /api/student-data/student/:studentId
+router.get(
+  "/student/:studentId",
+  authMiddleware,
+  roleMiddleware("Franchise"),
+  getStudentById
 );
 
 export default router;

@@ -307,6 +307,7 @@ export const login = async (req, res) => {
             institutionPhone: client?.institutionPhone,
             franchiseFinance: client?.franchiseFinance,
             courses: client?.courses,
+            gst: client?.gst,
           }
         : null,
 
