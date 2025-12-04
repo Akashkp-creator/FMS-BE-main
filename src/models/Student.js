@@ -94,6 +94,13 @@ const installmentSchema = new mongoose.Schema(
       default: 0,
       min: [0, "Paid amount cannot be negative"],
     },
+    // ✅ Added Notes Section
+    notes: {
+      type: String,
+      trim: true,
+      maxlength: [300, "Notes cannot exceed 300 characters"],
+      default: "",
+    },
   },
   { _id: false }
 );
