@@ -1643,6 +1643,25 @@
 // };
 // ===================================================================================
 // Optional: Generate HTML for preview (if you want to show preview before download)
+import axios from "axios";
+
+const addLogoToPDF = async (doc, logoUrl) => {
+  try {
+    const response = await axios.get(logoUrl, { responseType: "arraybuffer" });
+    const imageBuffer = Buffer.from(response.data, "binary");
+
+    doc.image(imageBuffer, 40, 40, {
+      width: 80, // adjust as needed
+      height: 80,
+      align: "left",
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error loading logo:", error);
+    return false;
+  }
+};
 import path from "path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
@@ -1765,7 +1784,7 @@ export const downloadPaymentSlip = async (req, res) => {
       if (fs.existsSync(regularFontPath) && fs.existsSync(boldFontPath)) {
         doc.registerFont("Noto", regularFontPath);
         doc.registerFont("Noto-Bold", boldFontPath);
-        console.log("Custom fonts registered successfully");
+        // console.log("Custom fonts registered successfully");
       } else {
         throw new Error("Font files not found, using Helvetica");
       }
@@ -1783,6 +1802,20 @@ export const downloadPaymentSlip = async (req, res) => {
 
     // Pipe PDF to response
     doc.pipe(res);
+
+    // Insert logo from URL
+    await addLogoToPDF(doc, client.logoUrl);
+
+    // Move Y down after logo
+    // let currentY = 130;
+
+    // Header
+    // doc
+    //   .fontSize(16)
+    //   .font(doc._font ? "Noto-Bold" : "Helvetica-Bold")
+    //   .text("PAYMENT RECEIPT", {
+    //     align: "center",
+    //   });
 
     // ==================== HELPER FUNCTIONS ====================
     const formatDate = (date) => {

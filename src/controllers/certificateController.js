@@ -342,7 +342,7 @@ export const downloadFranchiseCertificate = async (req, res) => {
       .font("Helvetica-Bold")
       .text(institutionName, 60, 70, {
         width: maxWidth - 150,
-        align: "left",
+        align: "center",
       });
 
     // 11. Certificate Title with golden gradient
@@ -449,6 +449,25 @@ export const downloadFranchiseCertificate = async (req, res) => {
         200,
         contentY + 200
       );
+    doc
+      .fillColor("#ffd700")
+      .fontSize(12)
+      .font("Helvetica-Bold")
+      .text("Valid Up to:", 100, contentY + 220);
+    const validUpToDate = new Date(franchise.validUpTo).toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }
+    );
+
+    doc
+      .fillColor("white")
+      .fontSize(12)
+      .font("Helvetica")
+      .text(validUpToDate, 200, contentY + 220);
 
     // 17. Beautiful signature section
     const signatureY = contentY + 240;
@@ -490,25 +509,25 @@ export const downloadFranchiseCertificate = async (req, res) => {
     // ========
 
     // Authorized Signatory
-    doc
-      .fillColor("#ffd700")
-      .fontSize(14)
-      .font("Helvetica-Bold")
-      .text("Authorized Signatory", xPosition, newSignatureY); // Uses new Y
+    // doc
+    //   .fillColor("#ffd700")
+    //   .fontSize(14)
+    //   .font("Helvetica-Bold")
+    //   .text("Authorized Signatory", xPosition, newSignatureY); // Uses new Y
 
-    // Institution Name
-    doc
-      .fillColor("white")
-      .fontSize(12)
-      .font("Helvetica-Bold")
-      .text(institutionName, xPosition, newSignatureY + 25); // Uses new Y
+    // // Institution Name
+    // doc
+    //   .fillColor("white")
+    //   .fontSize(12)
+    //   .font("Helvetica-Bold")
+    //   .text(institutionName, xPosition, newSignatureY + 25); // Uses new Y
 
-    // Manager Name
-    doc
-      .fillColor("white")
-      .fontSize(11)
-      .font("Helvetica")
-      .text(`Manager: ${managerName}`, xPosition, newSignatureY + 45); // Uses new Y
+    // // Manager Name
+    // doc
+    //   .fillColor("white")
+    //   .fontSize(11)
+    //   .font("Helvetica")
+    //   .text(`Manager: ${managerName}`, xPosition, newSignatureY + 45); // Uses new Y
 
     // 18. Add decorative elements
     // Top left decorative corner
@@ -543,13 +562,13 @@ export const downloadFranchiseCertificate = async (req, res) => {
       .strokeOpacity(0.2)
       .strokeColor("white")
       .stroke();
-
+    // This is a computer-generated receipt and does not require a physical signature.
     doc
       .fillColor("rgba(255, 255, 255, 0.7)")
       .fontSize(9)
       .font("Helvetica")
       .text(
-        "This is a digitally generated certificate. For verification, please contact the institution directly.",
+        "This is a digitally generated certificate does not require a signature. For verification, please contact the institution directly.",
         80,
         footerY,
         {
