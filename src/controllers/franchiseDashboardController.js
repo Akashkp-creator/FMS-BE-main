@@ -7,14 +7,6 @@ export const getFranchiseDashboard = async (req, res) => {
   try {
     const franchiseId = req.user.franchiseId;
 
-    // Validate franchiseId
-    // if (!mongoose.Types.ObjectId.isValid(franchiseId)) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Invalid franchise ID",
-    //   });
-    // }
-
     // Get current date for calculations
     const today = new Date();
     const currentMonth = today.getMonth();
@@ -105,10 +97,10 @@ export const getFranchiseDashboard = async (req, res) => {
       }).length,
     };
 
-    // Recent students (last 10)
+    // Recent students (last 2)
     const recentStudents = students
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 10)
+      .slice(0, 2)
       .map((student) => {
         const payment = student.payment[0];
         const totalPaid = payment
