@@ -4,7 +4,9 @@ import { authMiddleware, roleMiddleware } from "../middleware/auth.js";
 import {
   addFollowUpNote,
   createStudentLead,
+  getFollowUpNotes,
   getStudentLeads,
+  rejectStudentLead,
 } from "../controllers/createStudentLead.js";
 // import { createStudentLead } from "../controllers/studentLeadController.js";
 // import authMiddleware from "../middleware/auth.js";
@@ -26,5 +28,9 @@ router.get(
 );
 // /api/LeadStudentData/lead/:selectedLeadId/followup
 router.put("/lead/:id/followup", addFollowUpNote);
+//to get the follow ups
+router.get("/lead/:id/followup", getFollowUpNotes);
+// reason route   /LeadStudentData/lead/:id/reject
+router.put("/lead/:id/reject", rejectStudentLead);
 
 export default router;

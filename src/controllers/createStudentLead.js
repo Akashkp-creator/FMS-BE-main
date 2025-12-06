@@ -239,3 +239,94 @@ export const addFollowUpNote = async (req, res) => {
     });
   }
 };
+
+// to get the follow up history
+// import StudentLead from "../models/StudentLead.js";
+
+export const getFollowUpNotes = async (req, res) => {
+  try {
+    const { id } = req.params; // leadId
+
+    const lead = await StudentLead.findById(id).select("followUpNote");
+
+    if (!lead) {
+      return res.status(404).json({
+        success: false,
+        message: "Lead not found",
+      });
+    }
+
+    // Sort follow-up notes by date (latest first)
+    const sortedNotes = [...lead.followUpNote].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Follow-up notes fetched successfully",
+      notes: sortedNotes,
+    });
+  } catch (error) {
+    console.error("Get Follow-Up Notes Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+// to know the reason why the student has rejected
+// import StudentLead from "../models/StudentLead.js";
+
+export const rejectStudentLead = async (req, res) => {
+  try {
+    const { id } = req.params; // student lead ID
+    const { reason } = req.body;
+
+    // Validate: reason is required
+    if (!reason || reason.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Reason is required to mark the lead as Rejected",
+      });
+    }
+
+    // Validate: length (max 200 chars recommended)
+    if (reason.length > 200) {
+      return res.status(400).json({
+        success: false,
+        message: "Reason must not exceed 200 characters",
+      });
+    }
+
+    // Fetch lead
+    const lead = await StudentLead.findById(id);
+
+    if (!lead) {
+      return res.status(404).json({
+        success: false,
+        message: "Student lead not found",
+      });
+    }
+
+    // Update fields
+    lead.status = "Rejected"; // Update status
+    lead.reason = reason.trim(); // Save reason
+
+    await lead.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Lead marked as Rejected successfully",
+      data: lead,
+    });
+  } catch (error) {
+    console.error("Reject Student Lead Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
