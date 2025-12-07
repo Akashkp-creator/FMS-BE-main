@@ -79,3 +79,65 @@ export const createChannelPartner = async (req, res) => {
     });
   }
 };
+
+export const getChannelPartners = async (req, res) => {
+  try {
+    const managerId = req.user.managerId; // logged-in manager
+
+    // -----------------------
+    // 1️⃣ Filters
+    // -----------------------
+    let { name, phone, page = 1 } = req.query;
+    // const pageSize = 10;
+    page = Number(page);
+    // pageSize = Number(pageSize);
+    let pageSize = 1;
+
+    const filter = { managerId };
+
+    if (name && name.trim() !== "") {
+      filter.partnerName = { $regex: name, $options: "i" }; // case-insensitive search
+    }
+
+    if (phone && phone.trim() !== "") {
+      filter.phone = { $regex: phone, $options: "i" };
+    }
+
+    // -----------------------
+    // 2️⃣ Count Documents
+    // -----------------------
+    const total = await ChannelPartner.countDocuments(filter);
+
+    // -----------------------
+    // 3️⃣ Pagination Logic
+    // -----------------------
+    const pageCount = Math.ceil(total / pageSize);
+
+    const partners = await ChannelPartner.find(filter)
+      .sort({ createdAt: -1 }) // newest first
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    // -----------------------
+    // 4️⃣ Response
+    // -----------------------
+    return res.status(200).json({
+      success: true,
+      data: partners,
+      meta: {
+        pagination: {
+          page,
+          pageSize,
+          pageCount,
+          total,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Get Channel Partners Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};

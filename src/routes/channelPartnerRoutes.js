@@ -1,6 +1,9 @@
 // routes/channelPartnerRoutes.js
 import express from "express";
-import { createChannelPartner } from "../controllers/channelPartnerController.js";
+import {
+  createChannelPartner,
+  getChannelPartners,
+} from "../controllers/channelPartnerController.js";
 import {
   authMiddleware,
   roleMiddleware,
@@ -15,6 +18,7 @@ router.post(
   roleMiddleware("Manager"),
   createChannelPartner
 );
+router.get("/", authMiddleware, roleMiddleware("Manager"), getChannelPartners);
 
 export default router;
 // ⭐ Want Additional Features?
