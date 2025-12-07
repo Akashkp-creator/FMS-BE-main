@@ -6,6 +6,7 @@ export const createChannelPartner = async (req, res) => {
   try {
     const { partnerName, phone, email, address, commissionPercent, password } =
       req.body;
+    // console.log(req.user + "this is from the channel partner controller");
 
     const managerId = req.user.managerId; // Logged-in manager
 

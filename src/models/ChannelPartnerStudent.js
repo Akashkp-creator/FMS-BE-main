@@ -12,10 +12,6 @@ const paymentSchema = new mongoose.Schema({
     enum: ["Cash", "UPI", "Bank Transfer", "Card"],
     required: true,
   },
-  //   transactionId: {
-  //     type: String,
-  //     trim: true,
-  //   },
   receivedBy: {
     type: String,
     trim: true,
