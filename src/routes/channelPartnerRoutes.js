@@ -24,11 +24,18 @@ router.post(
   createChannelPartner
 );
 router.get("/", authMiddleware, roleMiddleware("Manager"), getChannelPartners);
+// POST /api/manager/channel-partner/student/:studentId/add-payment
 router.post(
-  "/add-payment/:studentId",
-  authMiddleware,
+  "/manager/channel-partner/student/:studentId/add-payment",
+  authMiddleware, // if you protect manager routes
+  roleMiddleware("Manager"),
   addPaymentToChannelPartnerStudent
 );
+// router.post(
+//   "/add-payment/:studentId",
+//   authMiddleware,
+//   addPaymentToChannelPartnerStudent
+// );
 //
 router.post(
   "/channel-partner/students",

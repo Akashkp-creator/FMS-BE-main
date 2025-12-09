@@ -48,6 +48,7 @@ const channelPartnerSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
     // Commission percentage for this partner (0–100)
     commissionPercent: {
       type: Number,
