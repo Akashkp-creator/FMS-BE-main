@@ -11,7 +11,10 @@ import {
   roleMiddleware,
   //   verifyManager,
 } from "../middleware/auth.js";
-import { addPaymentToChannelPartnerStudent } from "../controllers/channelPartnerPaymentController.js";
+import {
+  addPaymentToChannelPartnerStudent,
+  payCommissionToPartner,
+} from "../controllers/channelPartnerPaymentController.js";
 
 const router = express.Router();
 router.get("/list/students", authMiddleware, getChannelPartnerStudents);
@@ -22,6 +25,11 @@ router.post(
   authMiddleware,
   roleMiddleware("Manager"),
   createChannelPartner
+);
+router.post(
+  "/pay-commission/:partnerId",
+  authMiddleware,
+  payCommissionToPartner
 );
 router.get("/", authMiddleware, roleMiddleware("Manager"), getChannelPartners);
 // POST /api/manager/channel-partner/student/:studentId/add-payment

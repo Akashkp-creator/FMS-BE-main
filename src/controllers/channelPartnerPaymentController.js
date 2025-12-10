@@ -333,10 +333,11 @@ export const payCommissionToPartner = async (req, res) => {
     if (!amount || amount <= 0) {
       return res.status(400).json({ message: "Invalid payment amount" });
     }
+    console.log(req.user.managerId);
 
     const partner = await ChannelPartner.findOne({
       _id: partnerId,
-      managerId: req.user.managerID, // only own partners
+      managerId: req.user.managerId, // only own partners
     });
 
     if (!partner) {
@@ -358,7 +359,7 @@ export const payCommissionToPartner = async (req, res) => {
     // Save payout history
     await CommissionPayout.create({
       channelPartnerId: partnerId,
-      managerId: req.user.managerID,
+      managerId: req.user.managerId,
       amountPaid: amount,
       paymentMode: paymentMode || "Cash",
       // note: note || "",
